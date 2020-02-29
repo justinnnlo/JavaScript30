@@ -58,7 +58,37 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
-
+  const keys = document.querySelectorAll('.key');
+  function playSound(e) {
+    const audio = document.querySelector(`audio[data-key='${e.keyCode}']`);
+  // query select element with a class of key -> .key
+    const key = document.querySelector(`.key[data-key='${e.keyCode}']`);
+    console.log(audio);
+    // if there is no audio element -> we just want to stop the function 
+    if(!audio) return;
+    // otherwise just play the audio of the coresponding key
+    // we want to set currentTime = 0 to take into account of the case when we want to spam a button -> reset time = 0 allows us to spam since we don't need to wait till the full duration of the audio is finished to replay again
+    audio.currentTime = 0;
+    audio.play();
+    // adding the CSS 'playing' to the key to get the animation 
+    key.classList.add('playing');
+  }
+  window.addEventListener('keydown', playSound);
+    // what is a click event ? -> when you click something -> fire off an event 
+    // transition end event -> i was transitioned from something to something else
+    // listen on each key and listen for transition ending -> resetting CSS?
+    function removeTransition(e) {
+      console.log('this is event', e);
+      // skip if property is not transform
+      if(e.propertyName !== 'transform') return;
+      console.log(e.propertyName);
+      // what is getting called against the eventListener? -> this is based on context
+      console.log('this is this', this);
+      this.classList.remove('playing');
+    }
+    keys.forEach(key => {
+      key.addEventListener('transitionend', removeTransition);
+    })
 </script>
 
 
